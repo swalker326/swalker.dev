@@ -1,5 +1,3 @@
-import { ServerBuild } from "@remix-run/node";
-
 export type Frontmatter = {
 	title: string;
 	description: string;
@@ -33,7 +31,7 @@ export const getPosts = async (): Promise<PostMeta[]> => {
 
 function sortBy<T>(
 	arr: T[],
-	key: (item: T) => any,
+	key: (item: T) => string,
 	dir: "asc" | "desc" = "asc",
 ) {
 	return arr.sort((a, b) => {

@@ -8,9 +8,15 @@ dependencies:
   '@radix-ui/react-dropdown-menu':
     specifier: ^2.0.6
     version: 2.0.6(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
+  '@radix-ui/react-separator':
+    specifier: ^1.0.3
+    version: 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
   '@radix-ui/react-slot':
     specifier: ^1.0.2
     version: 1.0.2(@types/react@18.2.48)(react@18.2.0)
+  '@radix-ui/react-toggle':
+    specifier: ^1.0.3
+    version: 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
   '@remix-run/node':
     specifier: 2.5.0
     version: 2.5.0(typescript@5.3.3)
@@ -41,6 +47,9 @@ dependencies:
   remix-themes:
     specifier: ^1.2.2
     version: 1.2.2(@remix-run/react@2.5.0)(@remix-run/server-runtime@2.5.0)
+  swiper:
+    specifier: ^11.0.5
+    version: 11.0.5
   tailwind-merge:
     specifier: ^2.2.0
     version: 2.2.0
@@ -1511,6 +1520,27 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
+  /@radix-ui/react-separator@1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-itYmTy/kokS21aiV5+Z56MZB54KrhPgn6eHDKkFeOLR34HMN2s8PaN47qZZAGnvupcjxHaFZnW4pQEh0BvvVuw==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.23.8
+      '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
+      '@types/react': 18.2.48
+      '@types/react-dom': 18.2.18
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
   /@radix-ui/react-slot@1.0.2(@types/react@18.2.48)(react@18.2.0):
     resolution: {integrity: sha512-YeTpuq4deV+6DusvVUW4ivBgnkHwECUu0BiN43L5UCDFgdhsRUWAghhTF5MbvNTPzmiFOx90asDSUjWuCNapwg==}
     peerDependencies:
@@ -1524,6 +1554,29 @@ packages:
       '@radix-ui/react-compose-refs': 1.0.1(@types/react@18.2.48)(react@18.2.0)
       '@types/react': 18.2.48
       react: 18.2.0
+    dev: false
+
+  /@radix-ui/react-toggle@1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-Pkqg3+Bc98ftZGsl60CLANXQBBQ4W3mTFS9EJvNxKMZ7magklKV69/id1mlAlOFDDfHvlCms0fx8fA4CMKDJHg==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.23.8
+      '@radix-ui/primitive': 1.0.1
+      '@radix-ui/react-primitive': 1.0.3(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
+      '@radix-ui/react-use-controllable-state': 1.0.1(@types/react@18.2.48)(react@18.2.0)
+      '@types/react': 18.2.48
+      '@types/react-dom': 18.2.18
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /@radix-ui/react-use-callback-ref@1.0.1(@types/react@18.2.48)(react@18.2.0):
@@ -7086,6 +7139,11 @@ packages:
   /supports-preserve-symlinks-flag@1.0.0:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
+
+  /swiper@11.0.5:
+    resolution: {integrity: sha512-rhCwupqSyRnWrtNzWzemnBLMoyYuoDgGgspAm/8iBD3jCvAWycPLH4Z3TB0O5520DHLzMx94yUMH/B9Efpa48w==}
+    engines: {node: '>= 4.7.0'}
+    dev: false
 
   /tailwind-merge@2.2.0:
     resolution: {integrity: sha512-SqqhhaL0T06SW59+JVNfAqKdqLs0497esifRrZ7jOaefP3o64fdFNDMrAQWZFMxTLJPiHVjRLUywT8uFz1xNWQ==}

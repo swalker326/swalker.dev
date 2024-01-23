@@ -1,9 +1,9 @@
-import { ServerBuild } from "@remix-run/node";
-
 export type Frontmatter = {
-	title: string;
+	place: string;
+	position: string;
+	start: string; // YYYY-MM-DD
+	end?: string; // YYYY-MM-DD || null
 	description: string;
-	published: string; // YYYY-MM-DD
 	featured: boolean;
 };
 
@@ -12,9 +12,9 @@ export type PostMeta = {
 	frontmatter: Frontmatter;
 };
 
-export const getPosts = async (): Promise<PostMeta[]> => {
+export const getWorks = async (): Promise<PostMeta[]> => {
 	const modules = import.meta.glob<{ frontmatter: Frontmatter }>(
-		"../routes/blog.*.mdx",
+		"../routes/work.*.mdx",
 		{ eager: true },
 	);
 	const build = await import("virtual:remix/server-build");
@@ -28,12 +28,12 @@ export const getPosts = async (): Promise<PostMeta[]> => {
 			frontmatter: post.frontmatter,
 		};
 	});
-	return sortBy(posts, (post) => post.frontmatter.published, "desc");
+	return sortBy(posts, (post) => post.frontmatter.start, "desc");
 };
 
 function sortBy<T>(
 	arr: T[],
-	key: (item: T) => any,
+	key: (item: T) => string,
 	dir: "asc" | "desc" = "asc",
 ) {
 	return arr.sort((a, b) => {

@@ -11,12 +11,8 @@ export function Navigation() {
 			to: "/blog",
 		},
 		{
-			name: "Resume",
-			to: "/resume",
-		},
-		{
-			name: "Contact",
-			to: "/contact",
+			name: "Work",
+			to: "/work",
 		},
 	];
 	return (
@@ -30,8 +26,8 @@ export function Navigation() {
 								isPending
 									? ""
 									: isActive
-									  ? "text-blue-700 border-b-4 border-blue-700 dark:text-blue-500 dark:border-blue-500"
-									  : ""
+									  ? "text-blue-700 border-b-4 border-blue-700 dark:text-blue-500 dark:border-blue-500 text-lg"
+									  : "text-lg"
 							}
 						>
 							{name}

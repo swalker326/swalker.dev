@@ -71,10 +71,7 @@
     @apply border-border;
   }
   body {
+    @apply p-1.5;
     @apply bg-background text-foreground;
   }
 }
-/* .dark,
-:root[class~="dark"] {
-  
-} */

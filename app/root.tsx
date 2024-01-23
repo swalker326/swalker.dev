@@ -17,6 +17,9 @@ import {
 import clsx from "clsx";
 import { themeSessionResolver } from "./sessions.server";
 import { LoaderFunctionArgs, json } from "@remix-run/node";
+import { register } from "swiper/element/bundle";
+
+register();
 
 export async function loader({ request }: LoaderFunctionArgs) {
 	const { getTheme } = await themeSessionResolver(request);
