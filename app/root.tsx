@@ -18,6 +18,7 @@ import clsx from "clsx";
 import { themeSessionResolver } from "./sessions.server";
 import { LoaderFunctionArgs, json } from "@remix-run/node";
 import { register } from "swiper/element/bundle";
+import { Footer } from "~/components/footer";
 
 register();
 
@@ -30,7 +31,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 const Layout = () => {
 	return (
-		<div className="sm:container sm:mx-auto">
+		<div className="sm:container sm:mx-auto flex-grow">
 			<Outlet />
 		</div>
 	);
@@ -57,12 +58,15 @@ function App() {
 				<PreventFlashOnWrongTheme ssrTheme={Boolean(data.theme)} />
 				<Links />
 			</head>
-			<body>
-				<Header />
-				<Layout />
-				<ScrollRestoration />
-				<Scripts />
-				<LiveReload />
+			<body className="h-screen">
+				<main className="h-full flex flex-col justify-between ">
+					<Header />
+					<Layout />
+					<ScrollRestoration />
+					<Scripts />
+					<LiveReload />
+					<Footer />
+				</main>
 			</body>
 		</html>
 	);

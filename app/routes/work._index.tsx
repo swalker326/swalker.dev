@@ -22,7 +22,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function BlogIndex() {
 	const { posts } = useLoaderData<typeof loader>();
 	return (
-		//negative margin top to compensate for every other page having pt-10
+		//negative margin top to compensate for every other page having under this layout having pt-10
+		//just markdown things
 		<div className="not-prose -mt-3">
 			<h2 className="text-3xl pb-3">Work</h2>
 			<div>

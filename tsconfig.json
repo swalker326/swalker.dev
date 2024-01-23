@@ -14,11 +14,10 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "types": ["./swiper.d.ts"],
+    "skipLibCheck": true,
     "paths": {
       "~/*": ["./app/*"]
     },
-
-    // Remix takes care of building everything in `remix build`.
     "noEmit": true
   }
 }

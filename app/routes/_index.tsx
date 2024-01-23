@@ -20,16 +20,17 @@ export default function Index() {
 		<div className="pt-5">
 			<div
 				id="about"
-				className="w-full flex justify-center gap-x-6 flex-col sm:flex-row"
+				className="w-full flex justify-center gap-x-6 flex-col sm:flex-row "
 			>
-				<div className="sm:w-1/2 flex items-center pb-6 sm:pb-0">
-					<img
-						className="rounded-md"
-						src="/headshot.jpeg"
-						alt="shane headshot"
-					/>
+				<div className="sm:w-1/2 flex items-center pb-6 sm:pb-0 min-h-96">
+					<picture>
+						<source srcSet="headshot_desktop.jpg" media="(min-width: 1024px)" />
+						<source srcSet="headshot_tablet.jpg" media="(min-width: 768px)" />
+						<source srcSet="headshot_mobile.jpg" media="(max-width: 767px)" />
+						<img src="headshot_desktop.jpg" alt="shane's headshot" />
+					</picture>
 				</div>
-				<div className="prose lg:prose-xl dark:prose-invert sm:w-1/2">
+				<div className="prose lg:prose-xl dark:prose-invert sm:w-1/2 min-h-32">
 					<h2 className="not-prose text-4xl">👋 Hello</h2>
 					<p>
 						I'm Shane Walker, a passionate and self-taught software engineer
@@ -56,31 +57,44 @@ export default function Index() {
 				</div>
 			</div>
 			<Separator className="my-8" />
-			<h2 className="text-4xl mb-6">Recent Blogs</h2>
-			<swiper-container
-				style={{
-					"--swiper-navigation-color": "#fff",
-					"--swiper-pagination-color": "#000",
-				}}
-				slides-per-view="3"
-				navigation={true}
-				pagination={true}
-			>
-				{blogs.map((blog) => (
-					<swiper-slide key={blog.slug}>
-						<Link prefetch="intent" id={blog.slug} to={`/blog/${blog.slug}`}>
-							<div className="items-end gap-x-2 hover:bg-gray-100">
-								<h3 className="text-2xl ">{blog.frontmatter.title}</h3>
-								<h4 className="text-gray-800 font-thin">
-									{blog.frontmatter.published}
-								</h4>
-							</div>
+			<h2 className="text-4xl mb-6 font-bold text-blue-700 dark:text-blue-500">
+				Recent Blogs
+			</h2>
+			<div className="pb-6">
+				<swiper-container
+					style={{
+						"--swiper-navigation-color": "#fff",
+						"--swiper-pagination-color": "#000",
+					}}
+					slides-per-view="3"
+					navigation={true}
+					pagination={true}
+					autoHeight={true}
+				>
+					{blogs.map((blog) => (
+						<swiper-slide key={blog.slug}>
+							<div className="mr-3 h-[10rem]">
+								<Link
+									prefetch="intent"
+									id={blog.slug}
+									to={`/blog/${blog.slug}`}
+								>
+									<div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-3 flex-grow h-full">
+										<div className=" group items-end gap-x-2 hover:underline hover:text-blue-700 dark:hover:text-blue-500 transition-all duration-200 ease-in-out">
+											<h3 className="text-2xl ">{blog.frontmatter.title}</h3>
+											<h4 className="text-gray-800 dark:text-white group-hover:text-blue-700 dark:group-hover:text-blue-500 font-thin">
+												{blog.frontmatter.published}
+											</h4>
+										</div>
 
-							<p>{blog.frontmatter.description}</p>
-						</Link>
-					</swiper-slide>
-				))}
-			</swiper-container>
+										<p>{blog.frontmatter.description}</p>
+									</div>
+								</Link>
+							</div>
+						</swiper-slide>
+					))}
+				</swiper-container>
+			</div>
 		</div>
 	);
 }
