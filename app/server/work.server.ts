@@ -35,6 +35,7 @@ export const getWorkByName = async (workPlace: string) => {
 	);
 	const metaData = await response.json();
 	const downloadUrl = metaData.download_url;
+	console.log(metaData);
 
 	const postData = await (await fetch(downloadUrl)).text();
 	const { data: frontmatter, content } = matter(postData);
@@ -50,6 +51,7 @@ export const getWorks = async (): Promise<PostMeta[]> => {
 		"../routes/work.*.mdx",
 		{ eager: true },
 	);
+	console.log(modules);
 	const build = await import("virtual:remix/server-build");
 	const posts = Object.entries(modules).map(([file, post]) => {
 		const id = file.replace("../", "").replace(/\.mdx$/, "");
@@ -61,6 +63,7 @@ export const getWorks = async (): Promise<PostMeta[]> => {
 			frontmatter: post.frontmatter,
 		};
 	});
+	console.log(posts);
 	return sortBy(posts, (post) => post.frontmatter.start, "desc");
 };
 
