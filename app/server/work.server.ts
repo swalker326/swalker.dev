@@ -1,70 +1,91 @@
 import matter from "gray-matter";
 import { owner, repo } from "~/server/shared.server";
 import { z } from "zod";
-
-export type Frontmatter = {
-	place: string;
-	position: string;
-	start: string; // YYYY-MM-DD
-	end?: string; // YYYY-MM-DD || null
-	description: string;
-	featured: boolean;
-};
-
 const WorkFrontmatterSchema = z.object({
 	place: z.string(),
 	position: z.string(),
 	start: z.string(),
 	end: z.string().optional(),
 	description: z.string(),
-	featured: z.boolean(),
+	featured: z.boolean().optional(),
 });
+const WorkPayloadSceham = z.object({
+	content: z.string(),
+	data: WorkFrontmatterSchema,
+});
+export type WorkFrontmatter = z.infer<typeof WorkFrontmatterSchema>;
+
 export type FlattenedErrors = z.inferFlattenedErrors<
 	typeof WorkFrontmatterSchema
 >;
 
-export type PostMeta = {
-	slug: string;
-	frontmatter: Frontmatter;
-};
-
 const path = "content/work";
+
+const fetchWorksContent = async (url: string) => {
+	const response = await fetch(url);
+	const content = await response.text();
+	return parseWorksContent(content);
+};
+const parseWorksContent = (payload: string) => {
+	const content = matter(payload);
+	const parsedWork = WorkPayloadSceham.safeParse(content);
+	if (!parsedWork.success) {
+		throw parsedWork.error.flatten();
+	}
+	return parsedWork.data;
+};
+export const fetchWorksMetaData = async () => {
+	const response = await fetch(
+		`https://api.github.com/repos/${owner}/${repo}/contents/${path}`,
+	);
+	const metaData = await response.json();
+	const content: Array<{
+		data: {
+			place: string;
+			position: string;
+			start: string;
+			description: string;
+			end?: string | undefined;
+			featured?: boolean | undefined;
+		};
+		content: string;
+	}> = await Promise.all(
+		metaData.map(async (md: unknown) => {
+			if (
+				!md ||
+				typeof md !== "object" ||
+				!("download_url" in md) ||
+				!md.download_url ||
+				typeof md.download_url !== "string"
+			) {
+				throw new Error("Invalid response from GitHub API");
+			}
+			return await fetchWorksContent(md.download_url);
+		}),
+	);
+	return content;
+};
 export const getWorkByName = async (workPlace: string) => {
 	const response = await fetch(
 		`https://api.github.com/repos/${owner}/${repo}/contents/${path}/${workPlace}.mdx`,
 	);
 	const metaData = await response.json();
 	const downloadUrl = metaData.download_url;
-	console.log(metaData);
-
-	const postData = await (await fetch(downloadUrl)).text();
-	const { data: frontmatter, content } = matter(postData);
-	const parsedFrontmatter = WorkFrontmatterSchema.safeParse(frontmatter);
-	if (!parsedFrontmatter.success) {
-		throw parsedFrontmatter.error.flatten();
-	}
-
-	return { frontmatter: parsedFrontmatter.data, markdown: content };
+	return await fetchWorksContent(downloadUrl);
 };
-export const getWorks = async (): Promise<PostMeta[]> => {
-	const modules = import.meta.glob<{ frontmatter: Frontmatter }>(
-		"../routes/work.*.mdx",
-		{ eager: true },
-	);
-	console.log(modules);
-	const build = await import("virtual:remix/server-build");
-	const posts = Object.entries(modules).map(([file, post]) => {
-		const id = file.replace("../", "").replace(/\.mdx$/, "");
-		const slug = build.routes[id].path;
-		if (slug === undefined) throw new Error(`No route for ${id}`);
-
-		return {
-			slug,
-			frontmatter: post.frontmatter,
-		};
-	});
-	console.log(posts);
-	return sortBy(posts, (post) => post.frontmatter.start, "desc");
+export const getWorks = async () => {
+	const works = await fetchWorksMetaData();
+	// const build = await import("virtual:remix/server-build");
+	// works.map(({ data, content }) => {
+	// 	const id = placeToSlug(data.place);
+	// 	const slug = build.routes[id].path;
+	// 	if (slug === undefined) throw new Error(`No route for ${id}`);
+	// 	return {
+	// 		slug,
+	// 		frontmatter: data,
+	// 	};
+	// });
+	return works;
 };
 
 function sortBy<T>(
@@ -83,3 +104,7 @@ function compare<T>(a: T, b: T): number {
 	if (a > b) return 1;
 	return 0;
 }
+
+const placeToSlug = (place: string) => {
+	return place.toLowerCase().replace(/\s/g, "_");
+};

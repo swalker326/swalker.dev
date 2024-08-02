@@ -1,6 +1,6 @@
 import { LoaderFunctionArgs, json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
-import { getWorks } from "~/server/work.server";
+import { fetchWorksMetaData, getWorks } from "~/server/work.server";
 
 export const meta = () => {
 	return [
@@ -14,26 +14,28 @@ export const meta = () => {
 	];
 };
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader() {
 	const works = await getWorks();
-	return json({ posts: works });
+	console.log(works);
+	return json({ works });
 }
 
 export default function BlogIndex() {
-	const { posts } = useLoaderData<typeof loader>();
+	const { works } = useLoaderData<typeof loader>();
 	return (
 		//negative margin top to compensate for every other page having under this layout having pt-10
 		//just markdown things
 		<div className="not-prose -mt-3">
 			<h2 className="text-3xl pb-3">Work</h2>
 			<div>
-				{posts.map(({ slug, frontmatter }) => {
+				{works.map(({ data: frontmatter }) => {
 					return (
-						<div key={slug} className="py-2">
+						<div key={frontmatter.place} className="py-2">
 							<div className="flex gap-1.5">
 								<Link
 									prefetch="intent"
-									to={`/work/${slug}`}
+									to={`/work/${placeToSlug(frontmatter.place)}`}
+									// to={`/work/${slug}`}
 									className="text-blue-700 dark:text-blue-500"
 								>
 									{frontmatter.place}
@@ -50,3 +52,6 @@ export default function BlogIndex() {
 		</div>
 	);
 }
+const placeToSlug = (place: string) => {
+	return place.toLowerCase().replace(/\s/g, "_");
+};
