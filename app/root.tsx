@@ -64,7 +64,6 @@ function App() {
 					<Layout />
 					<ScrollRestoration />
 					<Scripts />
-					<LiveReload />
 					<Footer />
 				</main>
 			</body>

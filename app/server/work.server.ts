@@ -1,3 +1,7 @@
+import matter from "gray-matter";
+import { owner, repo } from "~/server/shared.server";
+import { z } from "zod";
+
 export type Frontmatter = {
 	place: string;
 	position: string;
@@ -7,11 +11,40 @@ export type Frontmatter = {
 	featured: boolean;
 };
 
+const WorkFrontmatterSchema = z.object({
+	place: z.string(),
+	position: z.string(),
+	start: z.string(),
+	end: z.string().optional(),
+	description: z.string(),
+	featured: z.boolean(),
+});
+export type FlattenedErrors = z.inferFlattenedErrors<
+	typeof WorkFrontmatterSchema
+>;
+
 export type PostMeta = {
 	slug: string;
 	frontmatter: Frontmatter;
 };
 
+const path = "content/work";
+export const getWorkByName = async (workPlace: string) => {
+	const response = await fetch(
+		`https://api.github.com/repos/${owner}/${repo}/contents/${path}/${workPlace}.mdx`,
+	);
+	const metaData = await response.json();
+	const downloadUrl = metaData.download_url;
+
+	const postData = await (await fetch(downloadUrl)).text();
+	const { data: frontmatter, content } = matter(postData);
+	const parsedFrontmatter = WorkFrontmatterSchema.safeParse(frontmatter);
+	if (!parsedFrontmatter.success) {
+		throw parsedFrontmatter.error.flatten();
+	}
+
+	return { frontmatter: parsedFrontmatter.data, markdown: content };
+};
 export const getWorks = async (): Promise<PostMeta[]> => {
 	const modules = import.meta.glob<{ frontmatter: Frontmatter }>(
 		"../routes/work.*.mdx",

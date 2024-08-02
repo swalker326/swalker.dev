@@ -1,3 +1,6 @@
+import matter from "gray-matter";
+import { owner, repo } from "~/server/shared.server";
+
 export type Frontmatter = {
 	title: string;
 	description: string;
@@ -8,6 +11,51 @@ export type Frontmatter = {
 export type PostMeta = {
 	slug: string;
 	frontmatter: Frontmatter;
+};
+
+const path = "content/posts";
+
+export const fetchPostTitles = async () => {
+	const response = await fetch(
+		`https://api.github.com/repos/${owner}/${repo}/contents/${path}`,
+	);
+	const metaData = await response.json();
+	const titles: string[] = metaData.map((post: { name: string }) => {
+		const name = post.name.replace(/\.mdx$/, "");
+		return name;
+	});
+	return titles;
+};
+
+export const fetchPostBySlug = async (slug: string) => {
+	const response = await fetch(
+		`https://api.github.com/repos/${owner}/${repo}/contents/${path}/${slug}.mdx`,
+	);
+	const metaData = await response.json();
+	const downloadUrl = metaData.download_url;
+
+	const postData = await (await fetch(downloadUrl)).text();
+	console.log(postData);
+	const { data: frontmatter, content } = matter(postData);
+
+	return { frontmatter, markdown: content };
+};
+
+export const fetchPosts = async () => {
+	const response = await fetch(
+		`https://api.github.com/repos/${owner}/${repo}/contents/${path}`,
+	);
+	const metaData = await response.json();
+	const downloadUrls = metaData.map((post: { download_url: string }) => {
+		return post.download_url;
+	});
+
+	const postData = await Promise.all(
+		downloadUrls.map(async (url: string) => {
+			const data = await (await fetch(url)).text();
+			return data;
+		}),
+	);
 };
 
 export const getPosts = async (): Promise<PostMeta[]> => {

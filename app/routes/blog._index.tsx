@@ -1,6 +1,8 @@
-import { LoaderFunctionArgs, json } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
-import { getPosts } from "~/server/posts.server";
+import { json } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+import { fetchPostBySlug, fetchPostTitles } from "~/server/posts.server";
+import Markdown from "react-markdown";
+import { c } from "node_modules/vite/dist/node/types.d-FdqQ54oU";
 
 export const meta = () => {
 	return [
@@ -15,18 +17,38 @@ export const meta = () => {
 };
 
 export async function loader() {
-	const posts = await getPosts();
-	return json({ posts }, { headers: { "Cache-Control": "max-age=3600" } });
+	const postTitles = await fetchPostTitles();
+	console.log(postTitles);
+	return json({ postTitles });
+	// return json({ posts }, { headers: { "Cache-Control": "max-age=3600" } });
 }
 
 export default function BlogIndex() {
-	const { posts } = useLoaderData<typeof loader>();
+	const { postTitles } = useLoaderData<typeof loader>();
+
 	return (
 		//negative margin top to compensate for every other page having pt-10
-		<div className="not-prose -mt-3">
+		<div className="-mt-3">
 			<h2 className="text-3xl pb-3">Blog</h2>
 			<div>
-				{posts.map(({ slug, frontmatter }) => (
+				<div>
+					{postTitles.map((post) => (
+						<div key={post} className="py-2">
+							<div className="flex gap-0.5">
+								<a
+									href={`/blog/${post}`}
+									className="text-blue-700 dark:text-blue-500 capitalize"
+								>
+									{post.replace(/-|_/g, " ")}
+								</a>
+							</div>
+						</div>
+					))}
+				</div>
+				{/* <article className="prose lg:prose-xl dark:prose-invert">
+					<Markdown>{posts.markdown}</Markdown>
+				</article> */}
+				{/* {posts.map(({ slug, frontmatter }) => (
 					<div key={slug} className="py-2">
 						<div className="flex gap-0.5">
 							<Link
@@ -42,7 +64,7 @@ export default function BlogIndex() {
 						</div>
 						<p>{frontmatter.description}</p>
 					</div>
-				))}
+				))} */}
 			</div>
 		</div>
 	);

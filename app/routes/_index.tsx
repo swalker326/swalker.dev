@@ -1,5 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
+import { useRef } from "react";
 import { Separator } from "~/components/ui/separator";
 import { getPosts } from "~/server/posts.server";
 
@@ -16,6 +17,8 @@ export async function loader() {
 
 export default function Index() {
 	const { blogs } = useLoaderData<typeof loader>();
+	const swiperRef = useRef(null);
+
 	return (
 		<div className="pt-5">
 			<div
@@ -27,7 +30,11 @@ export default function Index() {
 						<source srcSet="headshot_desktop.jpg" media="(min-width: 1024px)" />
 						<source srcSet="headshot_tablet.jpg" media="(min-width: 768px)" />
 						<source srcSet="headshot_mobile.jpg" media="(max-width: 767px)" />
-						<img src="headshot_desktop.jpg" alt="shane's headshot" />
+						<img
+							className="rounded-lg"
+							src="headshot_desktop.jpg"
+							alt="shane's headshot"
+						/>
 					</picture>
 				</div>
 				<div className="prose lg:prose-xl dark:prose-invert sm:w-1/2 min-h-32">
@@ -62,18 +69,29 @@ export default function Index() {
 			</h2>
 			<div className="pb-6">
 				<swiper-container
+					ref={swiperRef}
 					style={{
-						"--swiper-navigation-color": "#fff",
+						"--swiper-navigation-color": "rgb(29 78 216)",
 						"--swiper-pagination-color": "#000",
 					}}
-					slides-per-view="3"
+					// breakpoints={{
+					// 	640: {
+					// 		slidesPerView: 1,
+					// 	},
+					// 	768: {
+					// 		slidesPerView: 2,
+					// 	},
+					// 	1024: {
+					// 		slidesPerView: 3,
+					// 	},
+					// }}
 					navigation={true}
-					pagination={true}
+					spaceBetween={"10rem"}
 					autoHeight={true}
 				>
 					{blogs.map((blog) => (
 						<swiper-slide key={blog.slug}>
-							<div className="mr-3 h-[10rem]">
+							<div className="h-[10rem] px-10">
 								<Link
 									prefetch="intent"
 									id={blog.slug}
