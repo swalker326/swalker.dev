@@ -1,6 +1,6 @@
-import { LoaderFunctionArgs, json } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
-import { fetchWorksMetaData, getWorks } from "~/server/work.server";
+import { getWorks } from "~/server/work.server";
 
 export const meta = () => {
 	return [
@@ -16,7 +16,6 @@ export const meta = () => {
 
 export async function loader() {
 	const works = await getWorks();
-	console.log(works);
 	return json({ works });
 }
 

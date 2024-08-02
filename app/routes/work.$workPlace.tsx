@@ -1,4 +1,5 @@
 import { LoaderFunctionArgs, MetaFunction, json } from "@remix-run/node";
+import rehypeRaw from "rehype-raw";
 import { useLoaderData } from "@remix-run/react";
 import Markdown from "react-markdown";
 import { fetchWorksMetaData, getWorkByName } from "~/server/work.server";
@@ -16,12 +17,12 @@ export async function loader({ params }: LoaderFunctionArgs) {
 	return json({ workPlace: workPlaceData });
 }
 
-// export const meta: MetaFunction<typeof loader> = ({ data }) => {
-// 	return [
-// 		{ title: data?.workPlace.frontmatter.position },
-// 		{ description: data?.workPlace.frontmatter.description || "" },
-// 	];
-// };
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+	return [
+		{ title: data?.workPlace.data.position || "" },
+		{ description: data?.workPlace.data.description || "" },
+	];
+};
 
 export default function WorkPlace() {
 	const {
@@ -30,7 +31,7 @@ export default function WorkPlace() {
 	return (
 		<div className="py-10 prose dark:prose-invert">
 			<WorkHeader frontmatter={frontmatter} />
-			<Markdown>{content}</Markdown>
+			<Markdown rehypePlugins={[rehypeRaw]}>{content}</Markdown>
 		</div>
 	);
 }
