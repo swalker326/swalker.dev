@@ -1,19 +1,19 @@
 import { isRouteErrorResponse, useRouteError } from "@remix-run/react";
-import { FlattenedErrors } from "~/server/work.server";
+import { ZodError } from "zod";
 
 export function ErrorBoundary() {
 	const error = useRouteError();
 	console.log(error);
-	if (error && typeof error === "object" && "fieldErrors" in error) {
-		const zodError = error as FlattenedErrors;
+	if (error && error instanceof ZodError) {
+		const zodError = error;
 		return (
 			<div>
 				<h1>Invalid Data</h1>
 				<p>The following errors occurred:</p>
 				<ul>
-					{Object.entries(zodError.fieldErrors).map(([field, value]) => (
-						<li key={`${field}-${value.length}`}>
-							field {field}: {value.join(", ")}
+					{Object.entries(zodError.errors).map(([field, value]) => (
+						<li key={`${field}-${value.code}`}>
+							field {field}: {value.message}
 						</li>
 					))}
 				</ul>

@@ -27,18 +27,20 @@ const fetchContent = async <T>(
 	url: string,
 	schema: ZodSchema<T>,
 	path: string,
+	override = true,
 ) => {
 	//if in development, fetch from local filesystem
 
 	let content: string;
-	if (import.meta.env.DEV) {
+	if (import.meta.env.DEV && override === true) {
+		console.log("fetching from local filesystem");
 		const name = url.split("/").pop()?.split(".")[0];
 		content = await readFile(`${path}/${name}.mdx`, "utf-8");
 	} else {
+		console.log("fetching from github");
 		const response = await fetch(url);
 		content = await response.text();
 	}
-	// 	const content = await response.text();
 	return parseContent<T>(content, schema);
 };
 
@@ -59,7 +61,6 @@ export const bulkFetchMetadata = async <T>(schema: ZodSchema, path: string) => {
 		throw new Error("Failed to fetch metadata from GitHub API");
 	}
 	const metaData = await response.json();
-	//array of fetchContent promises
 	const results = await Promise.all(
 		metaData.map(async (md: unknown) => {
 			if (
@@ -71,7 +72,7 @@ export const bulkFetchMetadata = async <T>(schema: ZodSchema, path: string) => {
 			) {
 				return new Error("Invalid response from GitHub API");
 			}
-			return await fetchContent<T>(md.download_url, schema, path);
+			return await fetchContent<T>(md.download_url, schema, path, false);
 		}),
 	);
 	const successfulResults = results.filter(
@@ -88,9 +89,9 @@ export const getMDXByName = async <T>({
 	path,
 	schema,
 }: { path: string; name: string; schema: ZodSchema<T> }) => {
-	const downloadUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}/${name}.mdx`;
+	const downloadUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${path}/${name}.mdx`;
 	try {
-		const result = await fetchContent<T>(downloadUrl, schema, path);
+		const result = await fetchContent<T>(downloadUrl, schema, path, true);
 		if (result instanceof ZodError) {
 			throw result.flatten();
 		}
