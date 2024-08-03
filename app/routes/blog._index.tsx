@@ -1,8 +1,7 @@
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
-import { fetchPostBySlug, fetchPostTitles } from "~/server/posts.server";
-import Markdown from "react-markdown";
-import { c } from "node_modules/vite/dist/node/types.d-FdqQ54oU";
+import { Link, useLoaderData } from "@remix-run/react";
+import { format, formatDistanceToNow } from "date-fns";
+import { getPosts } from "~/server/posts.server";
 
 export const meta = () => {
 	return [
@@ -16,55 +15,53 @@ export const meta = () => {
 	];
 };
 
+export const titleToSlug = (title: string) => {
+	return title.toLowerCase().replace(/\s/g, "_");
+};
+
 export async function loader() {
-	const postTitles = await fetchPostTitles();
-	console.log(postTitles);
-	return json({ postTitles });
-	// return json({ posts }, { headers: { "Cache-Control": "max-age=3600" } });
+	const posts = await getPosts();
+	return json({ posts });
 }
 
 export default function BlogIndex() {
-	const { postTitles } = useLoaderData<typeof loader>();
+	const { posts } = useLoaderData<typeof loader>();
 
 	return (
 		//negative margin top to compensate for every other page having pt-10
-		<div className="-mt-3">
-			<h2 className="text-3xl pb-3">Blog</h2>
+		<div>
+			<h2 className="font-semibold text-5xl pb-3">Blog</h2>
 			<div>
-				<div>
-					{postTitles.map((post) => (
-						<div key={post} className="py-2">
-							<div className="flex gap-0.5">
-								<a
-									href={`/blog/${post}`}
-									className="text-blue-700 dark:text-blue-500 capitalize"
-								>
-									{post.replace(/-|_/g, " ")}
-								</a>
+				<div className="flex flex-col gap-3">
+					{posts
+						.sort((a, b) => {
+							return (
+								new Date(b.data.published).getTime() -
+								new Date(a.data.published).getTime()
+							);
+						})
+						.map((post) => (
+							<div className="py-2" key={post.data.title}>
+								<div className="flex flex-col gap-0.5">
+									<div className="flex items-end gap-1">
+										<Link
+											to={`/blog/${titleToSlug(post.data.title)}`}
+											className="text-blue-700 dark:text-blue-500 capitalize"
+										>
+											<h3 className="text-2xl">{post.data.title}</h3>
+										</Link>
+										<span className="text-gray-500 dark:text-gray-400 font-thin">
+											{format(
+												new Date(post.data.published).toLocaleDateString(),
+												"MMM dd, yyyy",
+											)}
+										</span>
+									</div>
+									<p>{post.data.description}</p>
+								</div>
 							</div>
-						</div>
-					))}
+						))}
 				</div>
-				{/* <article className="prose lg:prose-xl dark:prose-invert">
-					<Markdown>{posts.markdown}</Markdown>
-				</article> */}
-				{/* {posts.map(({ slug, frontmatter }) => (
-					<div key={slug} className="py-2">
-						<div className="flex gap-0.5">
-							<Link
-								prefetch="intent"
-								to={`/blog/${slug}`}
-								className="text-blue-700 dark:text-blue-500"
-							>
-								{frontmatter.title}
-							</Link>
-							<p className="text-gray-700 dark:text-gray-300 font-thin">
-								- {frontmatter.published}
-							</p>
-						</div>
-						<p>{frontmatter.description}</p>
-					</div>
-				))} */}
 			</div>
 		</div>
 	);

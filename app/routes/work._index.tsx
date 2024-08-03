@@ -1,6 +1,7 @@
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import { getWorks } from "~/server/work.server";
+import { format } from "date-fns";
 
 export const meta = () => {
 	return [
@@ -24,29 +25,38 @@ export default function BlogIndex() {
 	return (
 		//negative margin top to compensate for every other page having under this layout having pt-10
 		//just markdown things
-		<div className="not-prose -mt-3">
-			<h2 className="text-3xl pb-3">Work</h2>
+		<div>
+			<h2 className="font-semibold text-5xl pb-3">Work</h2>
 			<div>
-				{works.map(({ data: frontmatter }) => {
-					return (
-						<div key={frontmatter.place} className="py-2">
-							<div className="flex gap-1.5">
-								<Link
-									prefetch="intent"
-									to={`/work/${placeToSlug(frontmatter.place)}`}
-									// to={`/work/${slug}`}
-									className="text-blue-700 dark:text-blue-500"
-								>
-									{frontmatter.place}
-								</Link>
-								<p className="text-gray-500 dark:text-gray-400 font-thin">
-									{frontmatter.start} - {frontmatter.end || "Present"}
-								</p>
+				{works
+					.sort((a, b) => {
+						return (
+							new Date(b.data.start).getTime() -
+							new Date(a.data.start).getTime()
+						);
+					})
+					.map(({ data: frontmatter }) => {
+						return (
+							<div className="py-2" key={frontmatter.place}>
+								<div className="flex gap-1.5 items-end">
+									<Link
+										prefetch="intent"
+										to={`/work/${placeToSlug(frontmatter.place)}`}
+										className="text-blue-700 dark:text-blue-500 capitalize"
+									>
+										<h3 className="text-2xl">{frontmatter.place}</h3>
+									</Link>
+									<span className="text-gray-500 dark:text-gray-400 font-thin">
+										{format(new Date(frontmatter.start), "MMM yyy")} -{" "}
+										{frontmatter.end
+											? format(new Date(frontmatter.end), "MMM yyy")
+											: "Present"}
+									</span>
+								</div>
+								<p>{frontmatter.description}</p>
 							</div>
-							<p>{frontmatter.description}</p>
-						</div>
-					);
-				})}
+						);
+					})}
 			</div>
 		</div>
 	);
