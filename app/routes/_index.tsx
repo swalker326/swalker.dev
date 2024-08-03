@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { Separator } from "~/components/ui/separator";
 import { getPosts } from "~/server/posts.server";
 import { titleToSlug } from "./blog._index";
+import { format } from "date-fns";
 
 export const meta: MetaFunction = () => {
 	return [
@@ -86,6 +87,7 @@ export default function Index() {
 					// 		slidesPerView: 3,
 					// 	},
 					// }}
+					slidesPerGroupAuto={true}
 					navigation={true}
 					spaceBetween={"10rem"}
 					autoHeight={true}
@@ -102,7 +104,7 @@ export default function Index() {
 										<div className=" group items-end gap-x-2 hover:underline hover:text-blue-700 dark:hover:text-blue-500 transition-all duration-200 ease-in-out">
 											<h3 className="text-2xl ">{data.title}</h3>
 											<h4 className="text-gray-800 dark:text-white group-hover:text-blue-700 dark:group-hover:text-blue-500 font-thin">
-												{data.published}
+												{format(data.published, "MMM dd, yyyy")}
 											</h4>
 										</div>
 
