@@ -3,6 +3,7 @@ import { db } from "~/db";
 import { userTable } from "~/db/schema";
 import { eq } from "drizzle-orm";
 import { add } from "date-fns";
+import { getSessionExpirationDate } from "./auth.server";
 
 if (!process.env.GITHUB_CLIENT_ID) {
 	throw new Error("No GitHub client ID provided");
@@ -26,16 +27,12 @@ export const gitHubStrategy = new GitHubStrategy(
 		if (user) {
 			return user;
 		}
-		if (!extraParams.accessTokenExpiresIn) {
-			throw new Error("Missing access token expiration date");
-		}
+
 		const [newUser] = await db
 			.insert(userTable)
 			.values({
 				email: profile.emails[0].value,
-				sessionExpirationDate: add(new Date(), {
-					seconds: extraParams.accessTokenExpiresIn * 1000,
-				}),
+				sessionExpirationDate: getSessionExpirationDate(),
 				token: accessToken,
 			})
 			.returning();

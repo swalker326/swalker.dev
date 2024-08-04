@@ -8,5 +8,21 @@ export async function loader() {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-	return authenticator.authenticate("github", request);
+	try {
+		return await authenticator.authenticate("github", request);
+	} catch (error: unknown) {
+		// console.error("Error Logging In With Github", error);
+		if (error instanceof Response) {
+			console.log(error.status);
+			console.log(error.statusText);
+			const formData = await request.formData();
+			for (const value of formData.values()) {
+				console.log(value);
+			}
+			const rawRedirectTo = formData.get("redirectTo");
+			const redirectTo = typeof rawRedirectTo === "string" && rawRedirectTo;
+			// console.log(error);
+		}
+		throw error;
+	}
 }

@@ -1,14 +1,23 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { getFormProps, getInputProps, useForm } from "@conform-to/react";
 import { getZodConstraint, parseWithZod } from "@conform-to/zod";
-import { Form, redirect, useActionData } from "@remix-run/react";
+import { Form, json, redirect, useActionData } from "@remix-run/react";
 import { WorkCreateSchema } from "~/db/schema";
-import { createPost } from "~/server/posts.server";
 import { Button } from "~/components/ui/button";
 import { ConformInput } from "~/components/ConformInput";
 import { ConformTextarea } from "~/components/ConformTextarea";
 import { createWork } from "~/server/work.server";
 import { DatePicker } from "~/components/ui/datepicker";
+import { authenticator } from "~/services/auth.server";
+
+export async function loader({ request }: LoaderFunctionArgs) {
+	//require me to be logged in
+	const isAuth = await authenticator.isAuthenticated(request);
+	if (isAuth && isAuth.email === "shane@swalker.dev") {
+		return json({});
+	}
+	return redirect("/login");
+}
 
 export async function action({ request }: ActionFunctionArgs) {
 	const formData = await request.formData();

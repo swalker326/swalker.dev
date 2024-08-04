@@ -1,6 +1,8 @@
+import { relations } from "drizzle-orm";
 import { text, integer } from "drizzle-orm/sqlite-core";
 import { sqliteTable } from "drizzle-orm/sqlite-core";
 import { z } from "zod";
+import { session } from "./session";
 
 export const userTable = sqliteTable("users", {
 	id: integer("id").primaryKey(),
@@ -15,6 +17,10 @@ export const userTable = sqliteTable("users", {
 		.$default(() => new Date())
 		.notNull(),
 });
+
+export const userTableRelations = relations(userTable, (helpers) => ({
+	sessions: helpers.many(session, { relationName: "sessionToUser" }),
+}));
 
 export const UserCreateSchema = z.object({
 	token: z.string(),
