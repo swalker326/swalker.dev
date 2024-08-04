@@ -11,6 +11,9 @@
 		"typecheck": "tsc"
 	},
 	"dependencies": {
+		"@biomejs/biome": "^1.8.3",
+		"@libsql/client": "^0.8.1",
+		"@radix-ui/react-checkbox": "^1.1.1",
 		"@radix-ui/react-dropdown-menu": "^2.0.6",
 		"@radix-ui/react-separator": "^1.0.3",
 		"@radix-ui/react-slot": "^1.0.2",
@@ -18,9 +21,13 @@
 		"@remix-run/node": "^2.11.0",
 		"@remix-run/react": "^2.11.0",
 		"@remix-run/serve": "^2.11.0",
+		"@types/better-sqlite3": "^7.6.11",
+		"better-sqlite3": "^11.1.2",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.0",
 		"date-fns": "^3.6.0",
+		"dotenv": "^16.4.5",
+		"drizzle-orm": "^0.32.1",
 		"esbuild": "^0.20.1",
 		"front-matter": "^4.0.2",
 		"gray-matter": "^4.0.3",
@@ -39,6 +46,8 @@
 		"zod": "^3.22.4"
 	},
 	"devDependencies": {
+		"@conform-to/react": "^1.1.5",
+		"@conform-to/zod": "^1.1.5",
 		"@flydotio/dockerfile": "^0.5.0",
 		"@remix-run/dev": "2.11.0",
 		"@tailwindcss/typography": "^0.5.10",
@@ -46,6 +55,7 @@
 		"@types/react-dom": "^18.2.7",
 		"@typescript-eslint/eslint-plugin": "^6.7.4",
 		"autoprefixer": "^10.4.16",
+		"drizzle-kit": "^0.23.1",
 		"eslint": "^8.38.0",
 		"eslint-config-prettier": "^9.0.0",
 		"eslint-import-resolver-typescript": "^3.6.1",
