@@ -34,6 +34,7 @@ export const workTable = sqliteTable("works", {
 		.default(false)
 		.notNull(),
 	content: text("content").notNull(),
+	place: text("place").notNull(),
 	position: text("position").notNull(),
 
 	createdAt: integer("created_at", { mode: "timestamp" })
@@ -54,9 +55,38 @@ export const PostCreateSchema = z.object({
 	isPublished: z.boolean().optional(),
 	slug: z.preprocess(
 		(value) => (value === "" ? undefined : value),
-		z.string({ required_error: "Content is required" }).min(10),
+		z.string({ required_error: "Content is required" }),
 	),
 	title: z.string(),
 });
 
 export type PostInsert = z.infer<typeof PostCreateSchema>;
+
+export const WorkCreateSchema = z.object({
+	content: z.preprocess(
+		(value) => (value === "" ? undefined : value),
+		z.string({ required_error: "Content is required" }).min(10),
+	),
+	description: z.preprocess(
+		(value) => (value === "" ? undefined : value),
+		z.string({ required_error: "Content is required" }),
+	),
+	end: z.date().optional(),
+	place: z.preprocess(
+		(value) => (value === "" ? undefined : value),
+		z.string({ required_error: "Content is required" }),
+	),
+	position: z.preprocess(
+		(value) => (value === "" ? undefined : value),
+		z.string({ required_error: "Content is required" }),
+	),
+	start: z.date(),
+	isFeatured: z.boolean().optional(),
+	slug: z.preprocess(
+		(value) => (value === "" ? undefined : value),
+		z.string({ required_error: "Content is required" }),
+	),
+});
+
+export type SelectWork = typeof workTable.$inferSelect;
+export type WorkInsert = z.infer<typeof WorkCreateSchema>;
