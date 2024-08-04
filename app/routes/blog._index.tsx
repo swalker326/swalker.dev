@@ -1,6 +1,6 @@
 import { json } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
-import { format, formatDistanceToNow } from "date-fns";
+import { useLoaderData } from "@remix-run/react";
+import { ListCard } from "~/components/ListCard";
 import { getPosts } from "~/server/posts.server";
 
 export const meta = () => {
@@ -26,41 +26,22 @@ export async function loader() {
 
 export default function BlogIndex() {
 	const { posts } = useLoaderData<typeof loader>();
-
+	console.log("typeof date?", typeof posts[0]?.createdAt);
 	return (
 		//negative margin top to compensate for every other page having pt-10
 		<div>
 			<h2 className="font-semibold text-5xl pb-3">Blog</h2>
 			<div>
 				<div className="flex flex-col gap-3">
-					{posts
-						.sort((a, b) => {
-							return (
-								new Date(b.data.published).getTime() -
-								new Date(a.data.published).getTime()
-							);
-						})
-						.map((post) => (
-							<div className="py-2" key={post.data.title}>
-								<div className="flex flex-col gap-0.5">
-									<div className="flex items-end gap-1">
-										<Link
-											to={`/blog/${titleToSlug(post.data.title)}`}
-											className="text-blue-700 dark:text-blue-500 capitalize"
-										>
-											<h3 className="text-2xl">{post.data.title}</h3>
-										</Link>
-										<span className="text-gray-500 dark:text-gray-400 font-thin">
-											{format(
-												new Date(post.data.published).toLocaleDateString(),
-												"MMM dd, yyyy",
-											)}
-										</span>
-									</div>
-									<p>{post.data.description}</p>
-								</div>
-							</div>
-						))}
+					{posts.map((post) => (
+						<ListCard
+							key={post.title}
+							description={post.description}
+							created={new Date(post.createdAt)}
+							title={post.title}
+							to={`/blog/${post.slug}`}
+						/>
+					))}
 				</div>
 			</div>
 		</div>
