@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import type { SelectWork } from "~/db/schema";
+import type { WorkInsert } from "~/db/schema";
 
 export function WorkHeader({
 		place,
@@ -7,7 +7,7 @@ export function WorkHeader({
 		start,
 		end,
 		description,
-	}: Pick<SelectWork, "place" | "position" | "start" | "end" | "description">) {
+	}: Pick<WorkInsert, "place" | "position" | "start" | "end" | "description">) {
 		return (
 			<div className="not-prose dark:text-white">
 				<h1 className="text-3xl">{place}</h1>

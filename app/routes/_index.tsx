@@ -92,23 +92,23 @@ export default function Index() {
 					spaceBetween={"10rem"}
 					autoHeight={true}
 				>
-					{blogs.map(({ data }) => (
-						<swiper-slide key={titleToSlug(data.title)}>
+					{blogs.map(({ title, createdAt, description }) => (
+						<swiper-slide key={titleToSlug(title)}>
 							<div className="h-[10rem] px-10">
 								<Link
 									prefetch="intent"
-									id={titleToSlug(data.title)}
-									to={`/blog/${titleToSlug(data.title)}`}
+									id={titleToSlug(title)}
+									to={`/blog/${titleToSlug(title)}`}
 								>
 									<div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-3 flex-grow h-full">
 										<div className=" group items-end gap-x-2 hover:underline hover:text-blue-700 dark:hover:text-blue-500 transition-all duration-200 ease-in-out">
-											<h3 className="text-2xl ">{data.title}</h3>
+											<h3 className="text-2xl ">{title}</h3>
 											<h4 className="text-gray-800 dark:text-white group-hover:text-blue-700 dark:group-hover:text-blue-500 font-thin">
-												{format(data.published, "MMM dd, yyyy")}
+												{format(createdAt, "MMM dd, yyyy")}
 											</h4>
 										</div>
 
-										<p>{data.description}</p>
+										<p>{description}</p>
 									</div>
 								</Link>
 							</div>

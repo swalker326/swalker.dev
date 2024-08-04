@@ -2,27 +2,6 @@ import { desc, sql } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { z } from "zod";
 
-export const postTable = sqliteTable("posts", {
-	id: integer("id").primaryKey(),
-	slug: text("slug").notNull(),
-
-	title: text("title").notNull(),
-	description: text("description").notNull(),
-	isPublished: integer("isPublished", { mode: "boolean" })
-		.default(false)
-		.notNull(),
-	isFeatured: integer("isFeatured", { mode: "boolean" })
-		.default(false)
-		.notNull(),
-	content: text("content").notNull(),
-
-	createdAt: integer("created_at", { mode: "timestamp" })
-		.$default(() => new Date())
-		.notNull(),
-	updateAt: integer("updated_at", { mode: "timestamp" }).$onUpdate(
-		() => new Date(),
-	),
-});
 export const workTable = sqliteTable("works", {
 	id: integer("id").primaryKey(),
 	slug: text("slug").notNull(),
@@ -44,23 +23,6 @@ export const workTable = sqliteTable("works", {
 		() => new Date(),
 	),
 });
-
-export const PostCreateSchema = z.object({
-	content: z.preprocess(
-		(value) => (value === "" ? undefined : value),
-		z.string({ required_error: "Content is required" }).min(10),
-	),
-	description: z.string(),
-	isFeatured: z.boolean().optional(),
-	isPublished: z.boolean().optional(),
-	slug: z.preprocess(
-		(value) => (value === "" ? undefined : value),
-		z.string({ required_error: "Content is required" }),
-	),
-	title: z.string(),
-});
-
-export type PostInsert = z.infer<typeof PostCreateSchema>;
 
 export const WorkCreateSchema = z.object({
 	content: z.preprocess(
@@ -88,5 +50,4 @@ export const WorkCreateSchema = z.object({
 	),
 });
 
-export type SelectWork = typeof workTable.$inferSelect;
 export type WorkInsert = z.infer<typeof WorkCreateSchema>;

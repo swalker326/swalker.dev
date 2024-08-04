@@ -11,7 +11,7 @@ if (!process.env.TURSO_AUTH_TOKEN) {
 }
 
 export default defineConfig({
-	schema: "./app/db/schema.ts",
+	schema: "./app/db/schema/index.ts",
 	out: "./migrations",
 	dialect: "sqlite",
 	driver: "turso",

@@ -39,6 +39,8 @@
 		"react-dom": "^18.2.0",
 		"react-markdown": "^9.0.1",
 		"rehype-raw": "^7.0.0",
+		"remix-auth": "^3.7.0",
+		"remix-auth-github": "^1.7.0",
 		"remix-themes": "^1.2.2",
 		"swiper": "^11.0.5",
 		"tailwind-merge": "^2.2.0",

@@ -71,8 +71,9 @@ export function DatePicker({ meta }: { meta: FieldMetadata<Date> }) {
 						selected={
 							control.value ? parseLocalISOString(control.value) : undefined
 						}
-						onSelect={(value: string) => {
-							control.change(value ? new Date(value).toISOString() : "");
+						onSelect={(value) => {
+							control.change(value ? value.toISOString() : "");
+							return value;
 						}}
 						initialFocus
 					/>

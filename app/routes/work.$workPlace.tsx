@@ -36,7 +36,7 @@ export default function WorkPlace() {
 				position={position}
 				place={place}
 				start={new Date(start)}
-				end={end ? new Date(end) : null}
+				end={end ? new Date(end) : undefined}
 				description={description}
 			/>
 			<Markdown rehypePlugins={[rehypeRaw]}>{content}</Markdown>
