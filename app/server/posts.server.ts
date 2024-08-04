@@ -1,19 +1,25 @@
-import { PostPayload, PostPayloadSchema } from "~/utils/posts";
-import { getMDX, getMDXByName } from "./dataFetching";
+import { asc, eq } from "drizzle-orm";
+import { db } from "~/db";
+import { type PostInsert, postTable } from "~/db/schema";
 
-const path = "content/posts";
-
-export const getPosts = async () => {
-	const posts = await getMDX<PostPayload>({
-		path,
-		schema: PostPayloadSchema,
-	});
-	return posts;
+export const getPosts = async (limit = 10) => {
+	return await db
+		.select()
+		.from(postTable)
+		.orderBy(asc(postTable.createdAt))
+		.limit(limit);
 };
-export const getPostByName = async (name: string) => {
-	return await getMDXByName<PostPayload>({
-		name,
-		schema: PostPayloadSchema,
-		path,
-	});
+export const getPostBySlug = async (slug: string) => {
+	const posts = await db
+		.select()
+		.from(postTable)
+		.where(eq(postTable.slug, slug))
+		.limit(1);
+	return posts[0];
+};
+export const createPost = async (payload: PostInsert) => {
+	return await db
+		.insert(postTable)
+		.values(payload)
+		.returning({ id: postTable.id });
 };
