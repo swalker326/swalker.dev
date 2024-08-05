@@ -71,6 +71,7 @@
     @apply border-border;
   }
   body {
+    overflow-x: hidden;
     @apply p-1.5;
     @apply bg-background text-foreground;
   }

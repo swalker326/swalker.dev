@@ -1,6 +1,5 @@
 import {
 	Links,
-	LiveReload,
 	Meta,
 	Outlet,
 	Scripts,
@@ -16,11 +15,8 @@ import {
 } from "remix-themes";
 import clsx from "clsx";
 import { themeSessionResolver } from "./sessions.server";
-import { LoaderFunctionArgs, json } from "@remix-run/node";
-import { register } from "swiper/element/bundle";
+import { type LoaderFunctionArgs, json } from "@remix-run/node";
 import { Footer } from "~/components/footer";
-
-register();
 
 export async function loader({ request }: LoaderFunctionArgs) {
 	const { getTheme } = await themeSessionResolver(request);
@@ -31,7 +27,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 const Layout = () => {
 	return (
-		<div className="sm:container sm:mx-auto flex-grow">
+		<div className="sm:container sm:md-auto flex-grow">
 			<Outlet />
 		</div>
 	);
