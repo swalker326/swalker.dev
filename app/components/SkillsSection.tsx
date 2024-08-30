@@ -7,36 +7,13 @@ import {
   PenToolIcon
 } from "lucide-react";
 import { SkillList } from "./SkillList";
-import React, { useCallback } from "react";
 
 export function SkillsSection() {
-  const childRef = React.useRef<HTMLDivElement>(null);
-  const [childHeight, setChildHeight] = React.useState(0);
-
-  const updateChildHeight = useCallback(() => {
-    if (childRef.current) {
-      setChildHeight(childRef.current.offsetHeight);
-    }
-  }, []);
-
-  React.useEffect(() => {
-    // Initial height calculation
-    updateChildHeight();
-
-    // Add resize event listener
-    window.addEventListener("resize", updateChildHeight);
-
-    // Cleanup event listener on unmount
-    return () => {
-      window.removeEventListener("resize", updateChildHeight);
-    };
-  }, [updateChildHeight]);
-
   return (
     <section className="relative w-full">
       {/* <div style={{ height: childHeight }} /> */}
       <div />
-      <div ref={childRef} className=" bg-gray-300 dark:bg-gray-800 p-12">
+      <div className=" bg-gray-300 dark:bg-gray-800 p-12 rounded-md">
         <div className="grid items-center justify-center md:grid-cols-2 gap-10">
           <div className="space-y-4">
             <h2 className=" text-4xl mb-6 font-bold text-blue-700 dark:text-blue-500">

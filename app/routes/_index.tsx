@@ -1,8 +1,7 @@
 import type { MetaFunction } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import { getPosts } from "~/server/posts.server";
-import { titleToSlug } from "./blog._index";
-import { format } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import { Card } from "~/components/ui/card";
 import { SkillsSection } from "~/components/SkillsSection";
 import TypingComponent from "~/components/TypingComponent";
@@ -30,7 +29,7 @@ export default function Index() {
         <div className=" flex flex-col gap-4 justify-center">
           <p className="text-lg">
             I&apos;m a passionate and self-taught software engineer with a rich
-            experience spanning over five years in the tech industry. My journey
+            experience spanning over 7 years in the tech industry. My journey
             has led me to master JavaScript & TypeScript. I&apos;ve also had the
             pleasure of working with Go, Rust, Kotlin & Python at length. I
             pride myself on my proficiency in DevOps and deployment processes,
@@ -54,21 +53,17 @@ export default function Index() {
       </div>
       <SkillsSection />
       <div>
-        <h2 className="text-4xl mb-6 font-bold ">Recent Blogs</h2>
+        <h2 className="text-4xl mb-6 font-bold ">Recent Posts</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 py-2">
-          {blogs.map(({ title, createdAt, description }) => (
-            <div key={titleToSlug(title)} className="w-full h-32">
+          {blogs.map(({ title, createdAt, description, slug }) => (
+            <div key={slug} className="w-full h-32">
               <Card className="w-full h-full">
-                <Link
-                  prefetch="intent"
-                  id={titleToSlug(title)}
-                  to={`/blog/${titleToSlug(title)}`}
-                >
+                <Link prefetch="intent" id={slug} to={`/blog/${slug}`}>
                   <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-3 flex-grow h-full">
                     <div className=" group items-end gap-x-2 hover:underline hover:text-blue-700 dark:hover:text-blue-500 transition-all duration-200 ease-in-out">
                       <h3 className="text-2xl ">{title}</h3>
                       <h4 className="text-gray-800 dark:text-white group-hover:text-blue-700 dark:group-hover:text-blue-500 font-thin">
-                        {format(createdAt, "MMM dd, yyyy")}
+                        {formatDistanceToNow(new Date(createdAt))}
                       </h4>
                     </div>
 
