@@ -1,5 +1,5 @@
 import { NestedOutletLayout } from "~/components/NestOutletLayout";
 
-export default function Component() {
+export default function ProjectRoute() {
   return <NestedOutletLayout />;
 }
